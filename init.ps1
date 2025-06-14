@@ -186,10 +186,10 @@ Function Install-GitRepository
 		Throw "Invalid repository type '$RepositoryType'."
 	}
 
-	Write-Host -ForegroundColor DarkGray "Checking if $RepositoryName repository is already cloned in $repositoryRootPath..."
-	If (-not (Test-Path -Path "$repositoryRootPath\$RepositoryName"))
+	Write-Host -ForegroundColor DarkGray "Checking if $repositoryUrl is already cloned in $repositoryRootPath..."
+	If (-not (Test-Path -Path "$repositoryRootPath\$repositoryName"))
 	{
-		Write-Host -ForegroundColor DarkGray "$RepositoryName repository is not cloned in $repositoryRootPath. Cloning repository..."
+		Write-Host -ForegroundColor DarkGray "$repositoryUrl is not cloned in $repositoryRootPath. Cloning repository..."
 		git clone -b $RepositoryBranch $repositoryUrl "$repositoryRootPath\$RepositoryName"
 		Write-Host -ForegroundColor DarkGray "Repository cloned."
 	}
