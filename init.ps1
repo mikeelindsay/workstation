@@ -132,6 +132,34 @@ Function Install-SshKey
 	Write-Host -ForegroundColor Green "SSH key copied to clipboard."
 }
 
+Function Stop-ProcessIfRunning
+{
+	<#
+		.DESCRIPTION
+		Stops a process if it is running.
+	#>
+
+	Param
+	(
+		# The name of the process to stop.
+		[string] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()] $ProcessName
+	)
+
+	Write-Host -ForegroundColor DarkGray "Checking if $ProcessName is running..."
+	If (Get-Process -Name $ProcessName -ErrorAction SilentlyContinue)
+	{
+		Write-Host -ForegroundColor DarkGray "$ProcessName is running. Stopping process..."
+		Stop-Process -Name $ProcessName -Force
+		Write-Host -ForegroundColor DarkGray "$ProcessName stopped."
+	}
+	Else
+	{
+		Write-Host -ForegroundColor DarkGray "$ProcessName is not running."
+	}
+
+	Write-Host "Process stopped."
+}
+
 Function Install-VSCode
 {
 	<#
@@ -257,23 +285,24 @@ Function Install-SymLinkToEditorSettings
 	Write-Host -ForegroundColor DarkGray "Checking if symlink to editor settings exists..."
 	If (Test-SymLink -Path $editorSettingsPath)
 	{
-		Write-Host -ForegroundColor DarkGray "Symlink to editor settings exists."
+		Write-Host -ForegroundColor DarkGray "Symlink to editor settings exists at '$editorSettingsPath'."
+		Remove-Item -Path $editorSettingsPath -Force
 	}
 	Else
 	{
 		Write-Host -ForegroundColor DarkGray "Symlink to editor settings does not exist. Creating symlink..."
-
-		Write-Host -ForegroundColor DarkGray "Removing existing local settings.json if it exists..."
-		If (Test-Path -Path $editorSettingsPath)
-		{
-			Remove-Item -Path $editorSettingsPath
-			Write-Host -ForegroundColor DarkGray "Existing local settings.json removed."
-		}
-
-		Write-Host -ForegroundColor DarkGray "Creating symlink to VSCode settings..."
-		New-Item -ItemType SymbolicLink -Path $editorSettingsPath -Target "$repositoryRootPath\workstation\$EditorType\settings.json" | Out-Null
-		Write-Host -ForegroundColor DarkGray "Symlink to editor settings created."
 	}
+
+	Write-Host -ForegroundColor DarkGray "Removing existing local settings.json if it exists..."
+	If (Test-Path -Path $editorSettingsPath)
+	{
+		Write-Host -ForegroundColor DarkGray "Existing local settings.json removed."
+	}
+
+	$settingsPath = "$repositoryRootPath\workstation\vscode\settings.json"
+	Write-Host -ForegroundColor DarkGray "Creating settings symlink to '$settingsPath'..."
+	New-Item -ItemType SymbolicLink -Path $editorSettingsPath -Target $settingsPath | Out-Null
+	Write-Host -ForegroundColor DarkGray "Settings symlink created."
 
 	Write-Host "Symlink to editor settings created."
 }
@@ -426,6 +455,7 @@ Read-Host | Out-Null
 Install-GitRepository -RepositoryType "GitHub" -RepositoryOwner $PERSONAL_GITHUB_USERNAME -RepositoryName "workstation"
 Install-GitRepository -RepositoryType "GitHub" -RepositoryOwner $PERSONAL_GITHUB_USERNAME -RepositoryName "notes"
 
+Stop-ProcessIfRunning -ProcessName "Code"
 Install-VSCode
 Install-SymLinkToEditorSettings -EditorType "VSCode"
 Install-EditorKeybindings -EditorType "VSCode"
@@ -434,6 +464,7 @@ Install-EditorExtensions -EditorType "VSCode"
 Write-Host -ForegroundColor DarkGray "Checking if Cursor is installed..."
 If (Test-Path -Path "$env:USERPROFILE\AppData\Local\Programs\Cursor")
 {
+	Stop-ProcessIfRunning -ProcessName "Cursor"
 	Write-Host -ForegroundColor DarkGray "Cursor is installed. Installing Cursor settings..."
 	Install-SymLinkToEditorSettings -EditorType "Cursor"
 	Install-EditorKeybindings -EditorType "Cursor"
