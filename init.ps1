@@ -189,7 +189,7 @@ Function Install-GitRepository
 	If (-not (Test-Path -Path "$REPOSITORY_ROOT_PATH\$RepositoryName"))
 	{
 		Write-Host -ForegroundColor DarkGray "$RepositoryName repository is not cloned. Cloning repository..."
-		git clone -b $RepositoryBranch $githubUrl "$REPOSITORY_ROOT_PATH\$RepositoryName"
+		git clone -b $RepositoryBranch $repositoryUrl "$REPOSITORY_ROOT_PATH\$RepositoryName"
 		Write-Host -ForegroundColor DarkGray "Repository cloned."
 	}
 	Else {
@@ -203,4 +203,5 @@ Install-SshKey
 Write-Host -NoNewline -ForegroundColor Yellow "Add the SSH key to GitHub, then press Enter to continue..."
 Read-Host | Out-Null
 Install-VSCode
+Install-GitRepository -RepositoryType "GitHub" -RepositoryOwner "mikeelindsay" -RepositoryName "workstation"
 Write-Host -ForegroundColor Green "`n[CONFIGURATION COMPLETE]"
