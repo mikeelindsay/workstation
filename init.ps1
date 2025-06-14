@@ -393,14 +393,14 @@ Function Install-GlazeWindowManager
 	Write-Host -ForegroundColor DarkGray "Removing existing config.yaml if it exists..."
 	If (Test-Path -Path $glazeConfigPath)
 	{
-		Remove-Item -Path $glazeConfigPath
+		Remove-Item -Path $glazeConfigPath -Force
 		Write-Host -ForegroundColor DarkGray "Existing config.yaml removed."
 	}
 
 	Write-Host -ForegroundColor DarkGray "Creating path to config.yaml if it doesn't exist..."
 	If (-not (Test-Path -Path $glazeConfigRootPath))
 	{
-		New-Item -ItemType Directory -Path $glazeConfigRootPath | Out-Null
+		New-Item -ItemType Directory -Path $glazeConfigRootPath -Force | Out-Null
 		Write-Host -ForegroundColor DarkGray "Path to config.yaml created."
 	}
 	Else
@@ -409,7 +409,7 @@ Function Install-GlazeWindowManager
 	}
 
 	Write-Host -ForegroundColor DarkGray "Creating symlink to config.yaml..."
-	New-Item -ItemType SymbolicLink -Path $glazeConfigPath -Target "$repositoryRootPath\workstation\glazewm\config.yaml" | Out-Null
+	New-Item -ItemType SymbolicLink -Path $glazeConfigPath -Target "$repositoryRootPath\workstation\glazewm\config.yaml" -Force | Out-Null
 	Write-Host -ForegroundColor DarkGray "Symlink to config.yaml created."
 
 	Write-Host "Glaze Window Manager configured."
