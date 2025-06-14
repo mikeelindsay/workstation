@@ -26,7 +26,7 @@ Function Install-Git
 	Write-Host -ForegroundColor DarkGray "Checking if Git is installed..."
 	If (-not (Test-Path -Path $GIT_FULL_PATH))
 	{
-		Write-Host -ForegroundColor Red "Git is not installed. Please install Git and run this script again."
+		Write-Host -ForegroundColor DarkGray "Git is not installed. Installing Git..."
 
 		Write-Host -ForegroundColor DarkGray "Installing Git..."
 		Invoke-Expression "winget install --id Git.Git -e --silent --source winget"
@@ -35,6 +35,12 @@ Function Install-Git
 	Else {
 		Write-Host -ForegroundColor DarkGray "Git is installed."
 	}
+
+	Write-Host -ForegroundColor DarkGray "Setting Git SSH command..."
+	git config --global core.sshCommand $OPEN_SSH_FULL_PATH > $null
+	Write-Host -ForegroundColor DarkGray "Git SSH command set."
+
+	Write-Host "Git installed and configured."
 }
 
 Function Enable-OpenSshService
@@ -107,16 +113,20 @@ Function Install-SshKey
 		Write-Host -ForegroundColor DarkGray "SSH key is already in ssh-agent."
 	}
 
+	Write-Host -ForegroundColor DarkGray "Writing SSH config..."
+	Set-Content -Path "$sshRootPath/$SSH_CONFIG_NAME" -Value $config
+	Write-Host -ForegroundColor DarkGray "SSH config written."
+
 	Write-Host -ForegroundColor DarkGray "Copying SSH key to clipboard..."
 	Get-Content -Path "$sshRootPath/$SSH_KEY_NAME.pub" | Set-Clipboard
 	Write-Host -ForegroundColor Green "SSH key copied to clipboard."
 
-	Write-Host -ForegroundColor DarkGray "Writing SSH config..."
-	Set-Content -Path "$sshRootPath/$SSH_CONFIG_NAME" -Value $config
-	Write-Host -ForegroundColor DarkGray "SSH config written."
 }
 
 Install-Git
 Enable-OpenSshService
 Install-SshKey
-Read-Host -Prompt "Press Enter to continue..."
+Write-Host -NoNewline -ForegroundColor Yellow "Add the SSH key to GitHub, then press Enter to continue..."
+Read-Host | Out-Null
+
+Write-Host -ForegroundColor Green "`n[CONFIGURATION COMPLETE]"
