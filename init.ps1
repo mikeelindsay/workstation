@@ -262,13 +262,35 @@ Function Install-EditorExtensions
 		Installs editor extensions.
 	#>
 
-	$vscodeFullPath = "$env:USERPROFILE\AppData\Local\Programs\Microsoft VS Code\bin\code.cmd"
-	$vscodeExtensionsPath = "$repositoryRootPath\workstation\vscode\extensions-to-install.json"
-	$vscodeExtensions = Get-Content -Path $vscodeExtensionsPath | ConvertFrom-Json
+	Param(
+		# The type of editor to install extensions for.
+		[string] [Parameter(Mandatory = $true)] [ValidateSet('VSCode', 'Cursor')] $EditorType
+	)
 
-	$output = & $vscodeFullPath --list-extensions
+	$extensions = Get-Content -Path "$repositoryRootPath\workstation\vscode\extensions-to-install.json" | ConvertFrom-Json
+
+	If ($EditorType -eq "VSCode")
+	{
+		$editorPath = "$env:USERPROFILE\AppData\Local\Programs\Microsoft VS Code"
+		$editorExe = Join-Path $editorPath "Code.exe"
+		$cliJs = Join-Path $editorPath "resources\app\out\cli.js"
+	}
+	ElseIf ($EditorType -eq "Cursor")
+	{
+		$editorPath = "$env:USERPROFILE\AppData\Local\Programs\Cursor"
+		$editorExe = Join-Path $editorPath "Cursor.exe"
+		$cliJs = Join-Path $editorPath "resources\app\out\cli.js"
+	}
+	Else
+	{
+		Throw "Invalid editor type '$EditorType'."
+	}
+
+	$env:ELECTRON_RUN_AS_NODE = 1
+	$output = & $editorExe $cliJs --list-extensions
 	$installedExtensions = $output -split "`n"
-	ForEach ($extension in $vscodeExtensions)
+
+	ForEach ($extension in $extensions)
 	{
 		If ($installedExtensions.Contains($extension))
 		{
@@ -276,7 +298,7 @@ Function Install-EditorExtensions
 		}
 		Else {
 			Write-Host -ForegroundColor DarkGray "Installing" $extension "..."
-			& $vscodeFullPath --install-extension $extension > $null
+			& $editorExe $cliJs --install-extension $extension > $null
 			Write-Host -ForegroundColor DarkGray "Extension '$extension' installed."
 		}
 	}
@@ -293,6 +315,7 @@ Install-GitRepository -RepositoryType "GitHub" -RepositoryOwner $PERSONAL_GITHUB
 Install-GitRepository -RepositoryType "GitHub" -RepositoryOwner $PERSONAL_GITHUB_USERNAME -RepositoryName "notes"
 Install-VSCode
 Install-SymLinkToVSCodeSettings
-Install-EditorExtensions
+Install-EditorExtensions -EditorType "VSCode"
+Install-EditorExtensions -EditorType "Cursor"
 
 Write-Host -ForegroundColor Green "`n[CONFIGURATION COMPLETE]"
