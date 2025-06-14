@@ -1,0 +1,285 @@
+
+{
+    "projectManager.git.baseFolders": [
+        "C:\\Users\\Michael\\source\\repos"
+    ],
+    "workbench.colorTheme": "Simple Black Theme",
+    "editor.scrollBeyondLastLine": false,
+    "editor.cursorBlinking": "solid",
+    "editor.folding": false,
+    "editor.cursorSurroundingLines": 8,
+    "editor.rulers": [
+        {
+            "column": 80,
+            "color": "#acacac1a"
+        },
+        {
+            "column": 81,
+            "color": "#acacac1a"
+        },
+        {
+            "column": 120,
+            "color": "#acacac1a"
+        },
+        {
+            "column": 121,
+            "color": "#acacac1a"
+        }
+    ],
+    "workbench.colorCustomizations": {
+        "editor.lineHighlightBackground": "#8f8a8a52",
+        "editor.lineHighlightBorder": "#acacac1a",
+        "editorRuler.foreground": "#acacac1a"
+    },
+    "editor.lineNumbers": "on",
+    "editor.codeLens": false,
+    "editor.stickyScroll.scrollWithEditor": false,
+    "editor.stickyScroll.enabled": false,
+    "files.trimTrailingWhitespace": true,
+    "files.trimFinalNewlines": true,
+    "editor.insertSpaces": false,
+    "breadcrumbs.enabled": true,
+    "search.searchEditor.defaultNumberOfContextLines": 6,
+    "vim.normalModeKeyBindings": [
+        {
+            "before": [
+                "\\",
+                "f",
+                "f"
+            ],
+            "commands": [
+                "workbench.action.quickOpen"
+            ]
+        },
+        {
+            "before": [
+                "\\",
+                "g",
+                "g"
+            ],
+            "commands": [
+                "workbench.view.scm"
+            ]
+        },
+        {
+            "before": [
+                "\\",
+                "f",
+                "t"
+            ],
+            "commands": [
+                "workbench.view.testing"
+            ]
+        },
+        {
+            "before": [
+                "\\",
+                "f",
+                "r"
+            ],
+            "commands": [
+                "workbench.explorer.fileView.focus"
+            ]
+        },
+        {
+            "before": [
+                "\\",
+                "f",
+                "g"
+            ],
+            "commands": [
+                "workbench.view.search"
+            ]
+        },
+        {
+            "before": [
+                "n"
+            ],
+            "after": [
+                "n",
+                "z",
+                "z",
+                "z",
+                "v",
+            ]
+        },
+        {
+            "before": [
+                "N"
+            ],
+            "after": [
+                "N",
+                "z",
+                "z",
+                "z",
+                "v",
+            ]
+        },
+        {
+            "before": [
+                "<C-d>"
+            ],
+            "after": [
+                "1",
+                "5",
+                "g",
+                "j",
+                "z",
+                "z",
+            ]
+        },
+        {
+            "before": [
+                "<C-u>"
+            ],
+            "after": [
+                "1",
+                "5",
+                "g",
+                "k",
+                "z",
+                "z"
+            ]
+        },
+        {
+            "before": [
+                "\\",
+                "v",
+                "v"
+            ],
+            "commands": [
+                "editor.action.referenceSearch.trigger"
+            ]
+        },
+        {
+            "before": [
+                "\\",
+                "v",
+                "r"
+            ],
+            "commands": [
+                "editor.action.rename"
+            ]
+        },
+        {
+            "before": [
+                "\\",
+                "f",
+                "d"
+            ],
+            "commands": [
+                "editor.action.formatDocument"
+            ]
+        },
+        {
+            "before": [
+                "\\",
+                "f",
+                "t"
+            ],
+            "commands": [
+                "workbench.action.terminal.new"
+            ]
+        },
+        {
+            "before": [
+                "\\",
+                "t",
+                "t"
+            ],
+            "commands": [
+                "workbench.action.problems.focus"
+            ]
+        },
+        {
+            "before":
+            [
+                "\\",
+                "t",
+                "e"
+            ],
+            "commands": [
+                "workbench.view.testing.focus"
+            ]
+        },
+        {
+            "before":
+            [
+                "\\",
+                "t",
+                "r"
+            ],
+            "commands":
+            [
+                "testing.runAtCursor",
+                "workbench.view.testing.focus"
+            ]
+        },
+        {
+            "before": [
+                "\\",
+                "g",
+                "i"
+            ],
+            "commands": [
+                {
+                    "command": "type",
+                    "args": { "text": "/:<enter>wgd" }
+                }
+            ]
+        },
+    ],
+    "vim.visualModeKeyBindings": [
+        {
+            "before": [
+                "K"
+            ],
+            "commands": [
+                "editor.action.moveLinesUpAction"
+            ]
+        },
+        {
+            "before": [
+                "J"
+            ],
+            "commands": [
+                "editor.action.moveLinesDownAction"
+            ]
+        }
+    ],
+    "vim.incsearch": true,
+    "vim.useSystemClipboard": true,
+    "vim.useCtrlKeys": true,
+    "vim.handleKeys": {
+        "<C-a>": false,
+        "<C-f>": false
+    },
+    "vim.leader": "\\",
+    "vim.highlightedyank.color": "rgba(250, 250, 170, 0.5)",
+    "vim.highlightedyank.duration": 50,
+    "vim.highlightedyank.enable": true,
+    "extensions.experimental.affinity": {
+        "vscodevim.vim": 1
+    },
+    "editor.minimap.enabled": true,
+    "editor.renderWhitespace": "all",
+    "workbench.editor.showTabs": "none",
+    "cursor.cpp.enablePartialAccepts": true,
+    "window.customTitleBarVisibility": "never",
+    "workbench.editor.editorActionsLocation": "hidden",
+    "workbench.navigationControl.enabled": false,
+    "workbench.layoutControl.enabled": false,
+    "window.menuBarVisibility": "compact",
+    "git.autofetch": true,
+    "clock.dateFormat": "mm/dd/yyyy h:MM:ss TT",
+    "bicep.enableSurveys": false,
+    "cSpell.userWords": [
+        "pwsh",
+        "Trusable"
+    ],
+    "powershell.promptToUpdatePowerShell": false,
+    "editor.fontFamily": "JetBrains Mono",
+    "screencastMode.fontSize": 24,
+    "screencastMode.verticalOffset": 10,
+    "screencastMode.keyboardOverlayTimeout": 600
+}

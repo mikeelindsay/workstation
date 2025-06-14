@@ -6,6 +6,21 @@
 $errorActionPreference = "Stop"
 $warningPreference = "Continue"
 
+# A class representing a VSCode extension.
+Class CodeEditorExtension
+{
+	# The name of the extension.
+	[string] $Name
+	# The version of the extension.
+	[string] $Version
+
+	CodeEditorExtension([string] $Name, [string] $Version)
+	{
+		$this.Name = $Name
+		$this.Version = $Version
+	}
+}
+
 Set-Variable -Name OPEN_SSH_FULL_PATH -Scope Private -Option Constant -Value 'C:\Windows\System32\OpenSSH\ssh.exe'
 Set-Variable -Name PERSONAL_GITHUB_USERNAME -Scope Private -Option Constant -Value "mikeelindsay"
 
@@ -204,12 +219,53 @@ Function Install-GitRepository
 	Write-Host -ForegroundColor DarkCyan "Repository '$repositoryUrl' cloned."
 }
 
+Function Test-SymLink([string]$path)
+{
+	<#
+		.DESCRIPTION
+		Tests if a path is a symlink.
+	#>
+
+	$file = Get-Item $path -Force -ea SilentlyContinue
+	return [bool]($file.Attributes -band [IO.FileAttributes]::ReparsePoint)
+}
+
+Function Install-SymLinkToVSCodeSettings
+{
+	<#
+		.DESCRIPTION
+		Installs a symlink to the VSCode settings.
+	#>
+
+	Write-Host -ForegroundColor DarkGray "Checking if symlink to VSCode settings exists..."
+	If (Test-SymLink -Path "$env:USERPROFILE\AppData\Roaming\Code\User\settings.json")
+	{
+		Write-Host -ForegroundColor DarkGray "Symlink to VSCode settings exists."
+	}
+	Else {
+		Write-Host -ForegroundColor DarkGray "Symlink to VSCode settings does not exist. Creating symlink..."
+
+		Write-Host -ForegroundColor DarkGray "Removing existing local settings.json if it exists..."
+		If (Test-Path -Path "$env:USERPROFILE\AppData\Roaming\Code\User\settings.json")
+		{
+			Remove-Item -Path "$env:USERPROFILE\AppData\Roaming\Code\User\settings.json"
+			Write-Host -ForegroundColor DarkGray "Existing local settings.json removed."
+		}
+
+		Write-Host -ForegroundColor DarkGray "Creating symlink to VSCode settings..."
+		New-Item -ItemType HardLink -Path "$env:USERPROFILE\AppData\Roaming\Code\User\settings.json" -Target "$env:USERPROFILE\source\repos\workstation\vscode\settings.json" | Out-Null
+		Write-Host -ForegroundColor DarkGray "Symlink to VSCode settings created."
+	}
+
+	Write-Host "Symlink to VSCode settings created."
+}
 Install-Git
 Enable-OpenSshService
 Install-SshKey
 Write-Host -NoNewline -ForegroundColor Yellow "Add the SSH key to GitHub, then press Enter to continue..."
 Read-Host | Out-Null
-Install-VSCode
 Install-GitRepository -RepositoryType "GitHub" -RepositoryOwner $PERSONAL_GITHUB_USERNAME -RepositoryName "workstation"
 Install-GitRepository -RepositoryType "GitHub" -RepositoryOwner $PERSONAL_GITHUB_USERNAME -RepositoryName "notes"
+Install-VSCode
+Install-SymLinkToVSCodeSettings
 Write-Host -ForegroundColor Green "`n[CONFIGURATION COMPLETE]"
