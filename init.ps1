@@ -202,6 +202,10 @@ Function Install-GitRepository
 	Else
 	{
 		Write-Host -ForegroundColor DarkGray "$RepositoryName repository is already cloned."
+
+		Write-Host -ForegroundColor DarkGray "Pulling latest changes from $RepositoryBranch branch..."
+		git -C "$repositoryRootPath\$RepositoryName" pull origin $RepositoryBranch
+		Write-Host -ForegroundColor DarkGray "Latest changes pulled."
 	}
 
 	Write-Host -ForegroundColor DarkGray "Adding $repositoryRootPath\$RepositoryName to safe.directory..."
@@ -377,7 +381,8 @@ Function Install-GlazeWindowManager
 		Installs Glaze Window Manager.
 	#>
 
-	$glazeConfigPath = "$env:USERPROFILE\.glzr\GlazeWm\config.yaml"
+	$glazeConfigRootPath = "$env:USERPROFILE\.glzr\GlazeWm"
+	$glazeConfigPath = "$glazeConfigRootPath\config.yaml"
 
 	Write-Host -ForegroundColor DarkGray "Installing Glaze Window Manager..."
 	Invoke-Expression "winget install --id GlazeWM -e --silent --source winget"
@@ -393,9 +398,9 @@ Function Install-GlazeWindowManager
 	}
 
 	Write-Host -ForegroundColor DarkGray "Creating path to config.yaml if it doesn't exist..."
-	If (-not (Test-Path -Path $glazeConfigPath))
+	If (-not (Test-Path -Path $glazeConfigRootPath))
 	{
-		New-Item -ItemType Directory -Path $glazeConfigPath | Out-Null
+		New-Item -ItemType Directory -Path $glazeConfigRootPath | Out-Null
 		Write-Host -ForegroundColor DarkGray "Path to config.yaml created."
 	}
 	Else
@@ -409,6 +414,8 @@ Function Install-GlazeWindowManager
 
 	Write-Host "Glaze Window Manager configured."
 }
+
+
 
 Install-Git
 Enable-OpenSshService
