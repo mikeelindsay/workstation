@@ -415,7 +415,9 @@ Function Install-GlazeWindowManager
 	Write-Host "Glaze Window Manager configured."
 }
 
-
+Write-Host -ForegroundColor DarkGray "Resetting Winget sources..."
+winget source reset
+Write-Host -ForegroundColor DarkGray "Winget sources reset."
 
 Install-Git
 Enable-OpenSshService
@@ -434,9 +436,9 @@ Write-Host -ForegroundColor DarkGray "Checking if Cursor is installed..."
 If (Test-Path -Path "$env:USERPROFILE\AppData\Local\Programs\Cursor")
 {
 	Write-Host -ForegroundColor DarkGray "Cursor is installed. Installing Cursor settings..."
-	Install-SymLinkToEditorSettings -EditorType "Cursor"
-	Install-EditorKeybindings -EditorType "Cursor"
-	Install-EditorExtensions -EditorType "Cursor"
+	# Install-SymLinkToEditorSettings -EditorType "Cursor"
+	# Install-EditorKeybindings -EditorType "Cursor"
+	# Install-EditorExtensions -EditorType "Cursor"
 }
 Else
 {
