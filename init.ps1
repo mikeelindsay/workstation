@@ -167,7 +167,7 @@ Function Install-GitRepository
 		[string] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()] $RepositoryName,
 		# The branch of the repository to clone.
 		[string] [Parameter(Mandatory = $false)] [ValidateNotNullOrEmpty()] $RepositoryBranch = "master",
-		# The organization of the repository.
+		# The organization of the repository.\gg
 		[string] [Parameter(Mandatory = $false)] [ValidateNotNullOrEmpty()] $AzureDevOpsOrganization
 	)
 
@@ -207,5 +207,5 @@ Write-Host -NoNewline -ForegroundColor Yellow "Add the SSH key to GitHub, then p
 Read-Host | Out-Null
 Install-VSCode
 Install-GitRepository -RepositoryType "GitHub" -RepositoryOwner "mikeelindsay" -RepositoryName "workstation"
-Install-GitRepository -RepositoryType "GitHub" -RepositoryOwner "mikeelindsay" -RepositoryName ".ansible-workstation"
+Install-GitRepository -RepositoryType "GitHub" -RepositoryOwner "mikeelindsay" -RepositoryName "notes"
 Write-Host -ForegroundColor Green "`n[CONFIGURATION COMPLETE]"
