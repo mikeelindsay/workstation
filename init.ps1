@@ -367,5 +367,6 @@ Install-SymLinkToVSCodeSettings
 Install-EditorExtensions -EditorType "VSCode"
 Install-EditorExtensions -EditorType "Cursor"
 Install-EditorKeybindings -EditorType "VSCode"
+Install-EditorKeybindings -EditorType "Cursor"
 
 Write-Host -ForegroundColor Green "`n[CONFIGURATION COMPLETE]"
