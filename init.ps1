@@ -388,6 +388,7 @@ Function Install-GlazeWindowManager
 
 	Write-Host -ForegroundColor DarkGray "Installing Glaze Window Manager..."
 	Invoke-Expression "winget install glazewm --silent"
+	Invoke-Expression "winget install --id glazewm -e --silent --source winget"
 	Write-Host -ForegroundColor DarkGray "Glaze Window Manager installed."
 
 	Write-Host -ForegroundColor DarkGray "Configuring Glaze Window Manager..."
@@ -434,9 +435,9 @@ Write-Host -ForegroundColor DarkGray "Checking if Cursor is installed..."
 If (Test-Path -Path "$env:USERPROFILE\AppData\Local\Programs\Cursor")
 {
 	Write-Host -ForegroundColor DarkGray "Cursor is installed. Installing Cursor settings..."
-	# Install-SymLinkToEditorSettings -EditorType "Cursor"
-	# Install-EditorKeybindings -EditorType "Cursor"
-	# Install-EditorExtensions -EditorType "Cursor"
+	Install-SymLinkToEditorSettings -EditorType "Cursor"
+	Install-EditorKeybindings -EditorType "Cursor"
+	Install-EditorExtensions -EditorType "Cursor"
 }
 Else
 {
