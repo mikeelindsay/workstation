@@ -24,17 +24,17 @@ Function Install-Git
 	Set-Variable -Name GIT_FULL_PATH -Scope Private -Option Constant -Value "C:\Program Files\Git\bin\git.exe"
 
 	Write-Host -ForegroundColor DarkGray "Checking if Git is installed..."
-	# If (-not (Test-Path -Path $GIT_FULL_PATH))
-	# {
+	If (-not (Test-Path -Path $GIT_FULL_PATH))
+	{
 		Write-Host -ForegroundColor Red "Git is not installed. Please install Git and run this script again."
 
 		Write-Host -ForegroundColor DarkGray "Installing Git..."
 		Invoke-Expression "winget install --id Git.Git -e --silent --source winget"
 		Write-Host -ForegroundColor DarkGray "Git installed."
-	# }
-	# Else {
-		# Write-Host -ForegroundColor DarkGray "Git is installed."
-	# }
+	}
+	Else {
+		Write-Host -ForegroundColor DarkGray "Git is installed."
+	}
 }
 
 Function Enable-OpenSshService
