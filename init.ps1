@@ -33,6 +33,7 @@ Function Install-Git
 		Write-Host -ForegroundColor DarkGray "Git is not installed. Installing Git..."
 
 		Write-Host -ForegroundColor DarkGray "Installing Git..."
+		Invoke-Expression "winget install Git.Git --silent"
 		Invoke-Expression "winget install --id Git.Git -e --silent --source winget"
 		Write-Host -ForegroundColor DarkGray "Git installed."
 	}
@@ -146,6 +147,7 @@ Function Install-VSCode
 		Write-Host -ForegroundColor DarkGray "VSCode is not installed. Installing VSCode..."
 
 		Write-Host -ForegroundColor DarkGray "Installing VSCode..."
+		Invoke-Expression "winget install Microsoft.VisualStudioCode --silent"
 		Invoke-Expression "winget install --id Microsoft.VisualStudioCode -e --silent --source winget"
 		Write-Host -ForegroundColor DarkGray "VSCode installed."
 	}
