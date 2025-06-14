@@ -7,8 +7,9 @@ $errorActionPreference = "Stop"
 $warningPreference = "Continue"
 
 Set-Variable -Name OPEN_SSH_FULL_PATH -Scope Private -Option Constant -Value 'C:\Windows\System32\OpenSSH\ssh.exe'
-Set-Variable -Name REPOSITORY_ROOT_PATH -Scope Private -Option Constant -Value "$env:USERPROFILE\source\repos"
 Set-Variable -Name PERSONAL_GITHUB_USERNAME -Scope Private -Option Constant -Value "mikeelindsay"
+
+$repositoryRootPath = "$env:USERPROFILE\source\repos"
 
 $principal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
 $isAdmin = $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
@@ -185,11 +186,11 @@ Function Install-GitRepository
 		Throw "Invalid repository type '$RepositoryType'."
 	}
 
-	Write-Host -ForegroundColor DarkGray "Checking if $RepositoryName repository is already cloned..."
-	If (-not (Test-Path -Path "$REPOSITORY_ROOT_PATH\$RepositoryName"))
+	Write-Host -ForegroundColor DarkGray "Checking if $RepositoryName repository is already cloned in $repositoryRootPath..."
+	If (-not (Test-Path -Path "$repositoryRootPath\$RepositoryName"))
 	{
-		Write-Host -ForegroundColor DarkGray "$RepositoryName repository is not cloned. Cloning repository..."
-		git clone -b $RepositoryBranch $repositoryUrl "$REPOSITORY_ROOT_PATH\$RepositoryName"
+		Write-Host -ForegroundColor DarkGray "$RepositoryName repository is not cloned in $repositoryRootPath. Cloning repository..."
+		git clone -b $RepositoryBranch $repositoryUrl "$repositoryRootPath\$RepositoryName"
 		Write-Host -ForegroundColor DarkGray "Repository cloned."
 	}
 	Else {
