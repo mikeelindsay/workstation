@@ -197,7 +197,9 @@ Function Install-GitRepository
 		Write-Host -ForegroundColor DarkGray "$RepositoryName repository is already cloned."
 	}
 
-	git config --global --add safe.directory "$repositoryRootPath\$RepositoryName"
+	Write-Host -ForegroundColor DarkGray "Adding $repositoryRootPath\$RepositoryName to safe.directory..."
+	git config --global --add safe.directory "$repositoryRootPath\$RepositoryName" > $null
+	Write-Host -ForegroundColor DarkGray "safe.directory added."
 
 	Write-Host -ForegroundColor DarkCyan "Repository '$repositoryUrl' cloned."
 }
