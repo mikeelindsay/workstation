@@ -6,21 +6,6 @@
 $errorActionPreference = "Stop"
 $warningPreference = "Continue"
 
-# A class representing a VSCode extension.
-Class CodeEditorExtension
-{
-	# The name of the extension.
-	[string] $Name
-	# The version of the extension.
-	[string] $Version
-
-	CodeEditorExtension([string] $Name, [string] $Version)
-	{
-		$this.Name = $Name
-		$this.Version = $Version
-	}
-}
-
 Set-Variable -Name OPEN_SSH_FULL_PATH -Scope Private -Option Constant -Value 'C:\Windows\System32\OpenSSH\ssh.exe'
 Set-Variable -Name PERSONAL_GITHUB_USERNAME -Scope Private -Option Constant -Value "mikeelindsay"
 
@@ -30,7 +15,7 @@ $principal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.
 $isAdmin = $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 If (-not $isAdmin)
 {
-    Throw "This script must be ran as administrator."
+	Throw "This script must be ran as administrator."
 }
 
 Function Install-Git
@@ -51,7 +36,8 @@ Function Install-Git
 		Invoke-Expression "winget install --id Git.Git -e --silent --source winget"
 		Write-Host -ForegroundColor DarkGray "Git installed."
 	}
-	Else {
+	Else
+	{
 		Write-Host -ForegroundColor DarkGray "Git is installed."
 	}
 
@@ -82,7 +68,8 @@ Function Enable-OpenSshService
 		Start-Service -Name $OPENSSH_SERVICE_NAME
 		Write-Host -ForegroundColor DarkGray "OpenSSH service started."
 	}
-	Else {
+	Else
+	{
 		Write-Host -ForegroundColor DarkGray "OpenSSH service is already running."
 	}
 
@@ -113,7 +100,8 @@ Function Install-SshKey
 		Write-Host -ForegroundColor DarkGray "No existing SSH key found. Generating new SSH key..."
 		ssh-keygen -t ed25519 -f "$sshRootPath/$SSH_KEY_NAME" -C $emailAddress
 	}
-	Else {
+	Else
+	{
 		Write-Host -ForegroundColor DarkGray "Existing SSH key found."
 	}
 
@@ -128,7 +116,8 @@ Function Install-SshKey
 		ssh-add "$sshRootPath/$SSH_KEY_NAME"
 		Write-Host -ForegroundColor DarkGray "SSH key generated and added to ssh-agent."
 	}
-	Else {
+	Else
+	{
 		Write-Host -ForegroundColor DarkGray "SSH key is already in ssh-agent."
 	}
 
@@ -160,7 +149,8 @@ Function Install-VSCode
 		Invoke-Expression "winget install --id Microsoft.VisualStudioCode -e --silent --source winget"
 		Write-Host -ForegroundColor DarkGray "VSCode installed."
 	}
-	Else {
+	Else
+	{
 		Write-Host -ForegroundColor DarkGray "VSCode is already installed."
 	}
 
@@ -197,7 +187,8 @@ Function Install-GitRepository
 	{
 		$repositoryUrl = $azureDevOpsSSHurl
 	}
-	Else {
+	Else
+	{
 		Throw "Invalid repository type '$RepositoryType'."
 	}
 
@@ -208,7 +199,8 @@ Function Install-GitRepository
 		git clone -b $RepositoryBranch $repositoryUrl "$repositoryRootPath\$RepositoryName"
 		Write-Host -ForegroundColor DarkGray "Repository cloned."
 	}
-	Else {
+	Else
+	{
 		Write-Host -ForegroundColor DarkGray "$RepositoryName repository is already cloned."
 	}
 
@@ -237,28 +229,61 @@ Function Install-SymLinkToVSCodeSettings
 		Installs a symlink to the VSCode settings.
 	#>
 
+	$vscodeSettingsPath = "$env:USERPROFILE\AppData\Roaming\Code\User\settings.json"
+
 	Write-Host -ForegroundColor DarkGray "Checking if symlink to VSCode settings exists..."
-	If (Test-SymLink -Path "$env:USERPROFILE\AppData\Roaming\Code\User\settings.json")
+	If (Test-SymLink -Path $vscodeSettingsPath)
 	{
 		Write-Host -ForegroundColor DarkGray "Symlink to VSCode settings exists."
 	}
-	Else {
+	Else
+	{
 		Write-Host -ForegroundColor DarkGray "Symlink to VSCode settings does not exist. Creating symlink..."
 
 		Write-Host -ForegroundColor DarkGray "Removing existing local settings.json if it exists..."
-		If (Test-Path -Path "$env:USERPROFILE\AppData\Roaming\Code\User\settings.json")
+		If (Test-Path -Path $vscodeSettingsPath)
 		{
-			Remove-Item -Path "$env:USERPROFILE\AppData\Roaming\Code\User\settings.json"
+			Remove-Item -Path $vscodeSettingsPath
 			Write-Host -ForegroundColor DarkGray "Existing local settings.json removed."
 		}
 
 		Write-Host -ForegroundColor DarkGray "Creating symlink to VSCode settings..."
-		New-Item -ItemType HardLink -Path "$env:USERPROFILE\AppData\Roaming\Code\User\settings.json" -Target "$env:USERPROFILE\source\repos\workstation\vscode\settings.json" | Out-Null
+		New-Item -ItemType SymbolicLink -Path $vscodeSettingsPath -Target "$repositoryRootPath\workstation\vscode\settings.json" | Out-Null
 		Write-Host -ForegroundColor DarkGray "Symlink to VSCode settings created."
 	}
 
 	Write-Host "Symlink to VSCode settings created."
 }
+
+Function Install-EditorExtensions
+{
+	<#
+		.DESCRIPTION
+		Installs editor extensions.
+	#>
+
+	$vscodeFullPath = "$env:USERPROFILE\AppData\Local\Programs\Microsoft VS Code\bin\code.cmd"
+	$vscodeExtensionsPath = "$repositoryRootPath\workstation\vscode\extensions-to-install.json"
+	$vscodeExtensions = Get-Content -Path $vscodeExtensionsPath | ConvertFrom-Json
+
+	$output = & $vscodeFullPath --list-extensions
+	$installedExtensions = $output -split "`n"
+	ForEach ($extension in $vscodeExtensions)
+	{
+		If ($installedExtensions.Contains($extension))
+		{
+			Write-Host -ForegroundColor DarkGray "$extension already installed."
+		}
+		Else {
+			Write-Host -ForegroundColor DarkGray "Installing" $extension "..."
+			& $vscodeFullPath --install-extension $extension > $null
+			Write-Host -ForegroundColor DarkGray "Extension '$extension' installed."
+		}
+	}
+
+	Write-Host "Editor extensions installed."
+}
+
 Install-Git
 Enable-OpenSshService
 Install-SshKey
@@ -268,4 +293,6 @@ Install-GitRepository -RepositoryType "GitHub" -RepositoryOwner $PERSONAL_GITHUB
 Install-GitRepository -RepositoryType "GitHub" -RepositoryOwner $PERSONAL_GITHUB_USERNAME -RepositoryName "notes"
 Install-VSCode
 Install-SymLinkToVSCodeSettings
+Install-EditorExtensions
+
 Write-Host -ForegroundColor Green "`n[CONFIGURATION COMPLETE]"

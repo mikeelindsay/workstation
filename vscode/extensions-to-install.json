@@ -1,6 +1,21 @@
 [
-	{
-		"name": "ms-dotnettools.csdevkit",
-		"version": "1.16.6"
-	}
+	"ms-dotnettools.csdevkit",
+	"alefragnani.project-manager",
+	"compulim.vscode-clock",
+	"fbosch.battery-indicator",
+	"grapecity.gc-excelviewer",
+	"gruntfuggly.todo-tree",
+	"mechatroner.rainbow-csv",
+	"mohammed.simple-black-theme",
+	"ms-azuretools.vscode-bicep",
+	"ms-dotnettools.csdevkit",
+	"ms-dotnettools.csharp",
+	"ms-dotnettools.vscode-dotnet-runtime",
+	"ms-vscode.powershell",
+	"redhat.vscode-yaml",
+	"streetsidesoftware.code-spell-checker",
+	"tobias-z.vscode-harpoon",
+	"usernamehw.errorlens",
+	"vscodevim.vim",
+	"yy0931.go-to-next-error"
 ]
