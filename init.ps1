@@ -286,7 +286,6 @@ Function Install-EditorExtensions
 	)
 
 	Write-Host -ForegroundColor DarkGray "Configuring extensions for $EditorType..."
-
 	$extensions = Get-Content -Path "$repositoryRootPath\workstation\vscode\extensions-to-install.json" | ConvertFrom-Json
 
 	If ($EditorType -eq "VSCode")
@@ -371,6 +370,35 @@ Function Install-EditorKeybindings
 	Write-Host "Editor keybindings installed for $EditorType."
 }
 
+Function Install-GlazeWindowManager
+{
+	<#
+		.DESCRIPTION
+		Installs Glaze Window Manager.
+	#>
+
+	$glazeConfigPath = "$env:USERPROFILE\.glzr\GlazeWm\config.yaml"
+
+	Write-Host -ForegroundColor DarkGray "Installing Glaze Window Manager..."
+	Invoke-Expression "winget install --id GlazeWM -e --silent --source winget"
+	Write-Host -ForegroundColor DarkGray "Glaze Window Manager installed."
+
+	Write-Host -ForegroundColor DarkGray "Configuring Glaze Window Manager..."
+
+	Write-Host -ForegroundColor DarkGray "Removing existing config.yaml if it exists..."
+	If (Test-Path -Path $glazeConfigPath)
+	{
+		Remove-Item -Path $glazeConfigPath
+		Write-Host -ForegroundColor DarkGray "Existing config.yaml removed."
+	}
+
+	Write-Host -ForegroundColor DarkGray "Creating symlink to config.yaml..."
+	New-Item -ItemType SymbolicLink -Path $glazeConfigPath -Target "$repositoryRootPath\workstation\glazewm\config.yaml" | Out-Null
+	Write-Host -ForegroundColor DarkGray "Symlink to config.yaml created."
+
+	Write-Host "Glaze Window Manager configured."
+}
+
 Install-Git
 Enable-OpenSshService
 Install-SshKey
@@ -388,13 +416,15 @@ Write-Host -ForegroundColor DarkGray "Checking if Cursor is installed..."
 If (Test-Path -Path "$env:USERPROFILE\AppData\Local\Programs\Cursor")
 {
 	Write-Host -ForegroundColor DarkGray "Cursor is installed. Installing Cursor settings..."
-	Install-SymLinkToEditorSettings -EditorType "Cursor"
-	Install-EditorKeybindings -EditorType "Cursor"
-	Install-EditorExtensions -EditorType "Cursor"
+	# Install-SymLinkToEditorSettings -EditorType "Cursor"
+	# Install-EditorKeybindings -EditorType "Cursor"
+	# Install-EditorExtensions -EditorType "Cursor"
 }
 Else
 {
 	Write-Host -ForegroundColor DarkGray "Cursor is not installed. Skipping Cursor configuration..."
 }
+
+Install-GlazeWindowManager
 
 Write-Host -ForegroundColor Green "`n[CONFIGURATION COMPLETE]"
