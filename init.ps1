@@ -222,37 +222,54 @@ Function Test-SymLink([string]$path)
 	return [bool]($file.Attributes -band [IO.FileAttributes]::ReparsePoint)
 }
 
-Function Install-SymLinkToVSCodeSettings
+Function Install-SymLinkToEditorSettings
 {
 	<#
 		.DESCRIPTION
-		Installs a symlink to the VSCode settings.
+		Installs a symlink to the editor settings.
 	#>
 
-	$vscodeSettingsPath = "$env:USERPROFILE\AppData\Roaming\Code\User\settings.json"
+	Param
+	(
+		# The type of editor to install settings for.
+		[string] [Parameter(Mandatory = $true)] [ValidateSet('VSCode', 'Cursor')] $EditorType
+	)
 
-	Write-Host -ForegroundColor DarkGray "Checking if symlink to VSCode settings exists..."
-	If (Test-SymLink -Path $vscodeSettingsPath)
+	If ($EditorType -eq "VSCode")
 	{
-		Write-Host -ForegroundColor DarkGray "Symlink to VSCode settings exists."
+		$editorSettingsPath = "$env:USERPROFILE\AppData\Roaming\Code\User\settings.json"
+	}
+	ElseIf ($EditorType -eq "Cursor")
+	{
+		$editorSettingsPath = "$env:USERPROFILE\AppData\Roaming\Cursor\User\settings.json"
 	}
 	Else
 	{
-		Write-Host -ForegroundColor DarkGray "Symlink to VSCode settings does not exist. Creating symlink..."
+		Throw "Invalid editor type '$EditorType'."
+	}
+
+	Write-Host -ForegroundColor DarkGray "Checking if symlink to editor settings exists..."
+	If (Test-SymLink -Path $editorSettingsPath)
+	{
+		Write-Host -ForegroundColor DarkGray "Symlink to editor settings exists."
+	}
+	Else
+	{
+		Write-Host -ForegroundColor DarkGray "Symlink to editor settings does not exist. Creating symlink..."
 
 		Write-Host -ForegroundColor DarkGray "Removing existing local settings.json if it exists..."
-		If (Test-Path -Path $vscodeSettingsPath)
+		If (Test-Path -Path $editorSettingsPath)
 		{
-			Remove-Item -Path $vscodeSettingsPath
+			Remove-Item -Path $editorSettingsPath
 			Write-Host -ForegroundColor DarkGray "Existing local settings.json removed."
 		}
 
 		Write-Host -ForegroundColor DarkGray "Creating symlink to VSCode settings..."
-		New-Item -ItemType SymbolicLink -Path $vscodeSettingsPath -Target "$repositoryRootPath\workstation\vscode\settings.json" | Out-Null
-		Write-Host -ForegroundColor DarkGray "Symlink to VSCode settings created."
+		New-Item -ItemType SymbolicLink -Path $editorSettingsPath -Target "$repositoryRootPath\workstation\$EditorType\settings.json" | Out-Null
+		Write-Host -ForegroundColor DarkGray "Symlink to editor settings created."
 	}
 
-	Write-Host "Symlink to VSCode settings created."
+	Write-Host "Symlink to editor settings created."
 }
 
 Function Install-EditorExtensions
@@ -337,7 +354,6 @@ Function Install-EditorKeybindings
 	Write-Host -ForegroundColor DarkGray "Combining keybindings..."
 	$combinedKeybindings = $keybindings + $editorSpecificKeybindings
 
-	# set in editor specific keybindings path
 	If ($EditorType -eq "VSCode")
 	{
 		$editorKeybindingsPath = "$env:USERPROFILE\AppData\Roaming\Code\User\keybindings.json"
@@ -362,11 +378,23 @@ Write-Host -NoNewline -ForegroundColor Yellow "Add the SSH key to GitHub, then p
 Read-Host | Out-Null
 Install-GitRepository -RepositoryType "GitHub" -RepositoryOwner $PERSONAL_GITHUB_USERNAME -RepositoryName "workstation"
 Install-GitRepository -RepositoryType "GitHub" -RepositoryOwner $PERSONAL_GITHUB_USERNAME -RepositoryName "notes"
+
 Install-VSCode
-Install-SymLinkToVSCodeSettings
-Install-EditorExtensions -EditorType "VSCode"
-Install-EditorExtensions -EditorType "Cursor"
+Install-SymLinkToEditorSettings -EditorType "VSCode"
 Install-EditorKeybindings -EditorType "VSCode"
-Install-EditorKeybindings -EditorType "Cursor"
+Install-EditorExtensions -EditorType "VSCode"
+
+Write-Host -ForegroundColor DarkGray "Checking if Cursor is installed..."
+If (Test-Path -Path "$env:USERPROFILE\AppData\Local\Programs\Cursor")
+{
+	Write-Host -ForegroundColor DarkGray "Cursor is installed. Installing Cursor settings..."
+	Install-SymLinkToEditorSettings -EditorType "Cursor"
+	Install-EditorKeybindings -EditorType "Cursor"
+	Install-EditorExtensions -EditorType "Cursor"
+}
+Else
+{
+	Write-Host -ForegroundColor DarkGray "Cursor is not installed. Skipping Cursor configuration..."
+}
 
 Write-Host -ForegroundColor Green "`n[CONFIGURATION COMPLETE]"
