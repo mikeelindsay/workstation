@@ -1,11 +1,14 @@
 <#
 	.SYNOPSIS
+	Installs applications and tools used to configure a Windows workstation.
 #>
 
 $errorActionPreference = "Stop"
 $warningPreference = "Continue"
 
 Set-Variable -Name OPEN_SSH_FULL_PATH -Scope Private -Option Constant -Value 'C:\Windows\System32\OpenSSH\ssh.exe'
+Set-Variable -Name REPOSITORY_ROOT_PATH -Scope Private -Option Constant -Value "$env:USERPROFILE\source\repos"
+Set-Variable -Name PERSONAL_GITHUB_USERNAME -Scope Private -Option Constant -Value "mikeelindsay"
 
 $principal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
 $isAdmin = $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
@@ -117,10 +120,81 @@ Function Install-SshKey
 	Set-Content -Path "$sshRootPath/$SSH_CONFIG_NAME" -Value $config
 	Write-Host -ForegroundColor DarkGray "SSH config written."
 
-	Write-Host -ForegroundColor DarkGray "Copying SSH key to clipboard..."
+	Write-Host -NoNewline -ForegroundColor Yellow "Press Enter to copy the SSH key to clipboard..."
+	Read-Host | Out-Null
 	Get-Content -Path "$sshRootPath/$SSH_KEY_NAME.pub" | Set-Clipboard
 	Write-Host -ForegroundColor Green "SSH key copied to clipboard."
+}
 
+Function Install-VSCode
+{
+	<#
+		.DESCRIPTION
+		Installs VSCode.
+	#>
+
+	$vscodePath = "$env:USERPROFILE\AppData\Local\Programs\Microsoft VS Code\Code.exe"
+
+	Write-Host -ForegroundColor DarkGray "Checking if VSCode is installed..."
+	If (-not (Test-Path -Path $vscodePath))
+	{
+		Write-Host -ForegroundColor DarkGray "VSCode is not installed. Installing VSCode..."
+
+		Write-Host -ForegroundColor DarkGray "Installing VSCode..."
+		Invoke-Expression "winget install --id Microsoft.VisualStudioCode -e --silent --source winget"
+		Write-Host -ForegroundColor DarkGray "VSCode installed."
+	}
+	Else {
+		Write-Host -ForegroundColor DarkGray "VSCode is already installed."
+	}
+
+	Write-Host "VSCode installed."
+}
+
+Function Install-GitRepository
+{
+	<#
+		.DESCRIPTION
+		Installs the WorkstationSetup repository.
+	#>
+	Param(
+		# The type of repository to clone.
+		[string] [Parameter(Mandatory = $true)] [ValidateSet('GitHub', 'AzureDevOps')] $RepositoryType,
+		# The owner of the repository.
+		[string] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()] $RepositoryOwner,
+		# The name of the repository.
+		[string] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()] $RepositoryName,
+		# The branch of the repository to clone.
+		[string] [Parameter(Mandatory = $false)] [ValidateNotNullOrEmpty()] $RepositoryBranch = "master",
+		# The organization of the repository.
+		[string] [Parameter(Mandatory = $false)] [ValidateNotNullOrEmpty()] $AzureDevOpsOrganization
+	)
+
+	$azureDevOpsSSHurl = "{0}@vs-ssh.visualstudio.com:v3/{0}/{1}/{2}" -f $AzureDevOpsOrganization, $RepositoryOwner, $RepositoryName
+	$githubUrl = "git@github.com:{0}/{1}.git" -f $RepositoryOwner, $RepositoryName
+
+	If ($RepositoryType -eq "GitHub")
+	{
+		$repositoryUrl = $githubUrl
+	}
+	ElseIf ($RepositoryType -eq "AzureDevOps")
+	{
+		$repositoryUrl = $azureDevOpsSSHurl
+	}
+	Else {
+		Throw "Invalid repository type '$RepositoryType'."
+	}
+
+	Write-Host -ForegroundColor DarkGray "Checking if $RepositoryName repository is already cloned..."
+	If (-not (Test-Path -Path "$REPOSITORY_ROOT_PATH\$RepositoryName"))
+	{
+		Write-Host -ForegroundColor DarkGray "$RepositoryName repository is not cloned. Cloning repository..."
+		git clone -b $RepositoryBranch $githubUrl "$REPOSITORY_ROOT_PATH\$RepositoryName"
+		Write-Host -ForegroundColor DarkGray "Repository cloned."
+	}
+	Else {
+		Write-Host -ForegroundColor DarkGray "$RepositoryName repository is already cloned."
+	}
 }
 
 Install-Git
@@ -128,5 +202,5 @@ Enable-OpenSshService
 Install-SshKey
 Write-Host -NoNewline -ForegroundColor Yellow "Add the SSH key to GitHub, then press Enter to continue..."
 Read-Host | Out-Null
-
+Install-VSCode
 Write-Host -ForegroundColor Green "`n[CONFIGURATION COMPLETE]"
