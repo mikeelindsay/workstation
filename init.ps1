@@ -47,15 +47,28 @@ Function Install-SshKey
 	#>
 
 	Set-Variable -Name SSH_KEY_NAME -Scope Private -Option Constant -Value "id_ed25519"
+	Set-Variable -Name SSH_CONFIG_NAME -Scope Private -Option Constant -Value "config"
 
-	$keyPath = "$env:USERPROFILE/.ssh/$SSH_KEY_NAME"
+	$config = "Host *
+    AddKeysToAgent yes
+    IdentitiesOnly yes
+"
+	$sshRootPath = "$env:USERPROFILE/.ssh/"
+
+
+	Write-Host -ForegroundColor DarkGray "Checking if Git is installed..."
+	If (-not (Test-Path -Path "C:/Windows/System32/OpenSSH/ssh.exe"))
+	{
+		Write-Host -ForegroundColor Red "Git is not installed. Please install Git and run this script again."
+		Exit
+	}
 
 	Write-Host -ForegroundColor DarkGray "Checking for existing SSH key..."
-	If (-not (Test-Path -Path $keyPath))
+	If (-not (Test-Path -Path "$sshRootPath/$SSH_KEY_NAME"))
 	{
 		$emailAddress = Read-Host -Prompt "Enter your email address: "
 		Write-Host -ForegroundColor DarkGray "No existing SSH key found. Generating new SSH key..."
-		ssh-keygen -t ed25519 -f $keyPath -C $emailAddress
+		ssh-keygen -t ed25519 -f "$sshRootPath/$SSH_KEY_NAME" -C $emailAddress
 	}
 	Else {
 		Write-Host -ForegroundColor DarkGray "Existing SSH key found."
@@ -63,13 +76,13 @@ Function Install-SshKey
 
 	Write-Host -ForegroundColor DarkGray "Checking if SSH key is already in ssh-agent..."
 	$existingKeys = ssh-add -L
-	$keyContent = Get-Content -Path "$keyPath.pub"
+	$keyContent = Get-Content -Path "$sshRootPath/$SSH_KEY_NAME.pub"
 	If ($existingKeys -notcontains $keyContent)
 	{
 		Write-Host -ForegroundColor DarkGray "SSH key is not in ssh-agent. Adding to ssh-agent..."
 
 		Write-Host -ForegroundColor DarkGray "Adding SSH key to ssh-agent..."
-		ssh-add $keyPath
+		ssh-add "$sshRootPath/$SSH_KEY_NAME"
 		Write-Host -ForegroundColor DarkGray "SSH key generated and added to ssh-agent."
 	}
 	Else {
@@ -77,10 +90,15 @@ Function Install-SshKey
 	}
 
 	Write-Host -ForegroundColor DarkGray "Copying SSH key to clipboard..."
-	Get-Content -Path "$keyPath.pub" | Set-Clipboard
+	Get-Content -Path "$sshRootPath/$SSH_KEY_NAME.pub" | Set-Clipboard
 	Write-Host -ForegroundColor Green "SSH key copied to clipboard."
+
+	Write-Host -ForegroundColor DarkGray "Writing SSH config..."
+	Set-Content -Path "$sshRootPath/$SSH_CONFIG_NAME" -Value $config
+	Write-Host -ForegroundColor DarkGray "SSH config written."
 }
 
 Enable-OpenSshService
 Install-SshKey
+git config --global core.sshCommand "C:/Windows/System32/OpenSSH/ssh.exe"
 Read-Host -Prompt "Press Enter to continue..."
