@@ -197,6 +197,8 @@ Function Install-GitRepository
 		Write-Host -ForegroundColor DarkGray "$RepositoryName repository is already cloned."
 	}
 
+	git config --global --add safe.directory "$repositoryRootPath\$RepositoryName"
+
 	Write-Host -ForegroundColor DarkCyan "Repository '$repositoryUrl' cloned."
 }
 
@@ -206,6 +208,6 @@ Install-SshKey
 Write-Host -NoNewline -ForegroundColor Yellow "Add the SSH key to GitHub, then press Enter to continue..."
 Read-Host | Out-Null
 Install-VSCode
-Install-GitRepository -RepositoryType "GitHub" -RepositoryOwner "mikeelindsay" -RepositoryName "workstation"
-Install-GitRepository -RepositoryType "GitHub" -RepositoryOwner "mikeelindsay" -RepositoryName "notes"
+Install-GitRepository -RepositoryType "GitHub" -RepositoryOwner $PERSONAL_GITHUB_USERNAME -RepositoryName "workstation"
+Install-GitRepository -RepositoryType "GitHub" -RepositoryOwner $PERSONAL_GITHUB_USERNAME -RepositoryName "notes"
 Write-Host -ForegroundColor Green "`n[CONFIGURATION COMPLETE]"
