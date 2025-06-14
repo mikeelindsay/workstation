@@ -207,4 +207,5 @@ Write-Host -NoNewline -ForegroundColor Yellow "Add the SSH key to GitHub, then p
 Read-Host | Out-Null
 Install-VSCode
 Install-GitRepository -RepositoryType "GitHub" -RepositoryOwner "mikeelindsay" -RepositoryName "workstation"
+Install-GitRepository -RepositoryType "GitHub" -RepositoryOwner "mikeelindsay" -RepositoryName ".ansible-workstation"
 Write-Host -ForegroundColor Green "`n[CONFIGURATION COMPLETE]"
