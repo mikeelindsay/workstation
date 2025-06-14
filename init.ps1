@@ -196,6 +196,7 @@ Function Install-GitRepository
 	Else {
 		Write-Host -ForegroundColor DarkGray "$RepositoryName repository is already cloned."
 	}
+
 	Write-Host -ForegroundColor DarkCyan "Repository '$repositoryUrl' cloned."
 }
 
