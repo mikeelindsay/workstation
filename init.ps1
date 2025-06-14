@@ -262,10 +262,13 @@ Function Install-EditorExtensions
 		Installs editor extensions.
 	#>
 
-	Param(
+	Param
+	(
 		# The type of editor to install extensions for.
 		[string] [Parameter(Mandatory = $true)] [ValidateSet('VSCode', 'Cursor')] $EditorType
 	)
+
+	Write-Host -ForegroundColor DarkGray "Configuring extensions for $EditorType..."
 
 	$extensions = Get-Content -Path "$repositoryRootPath\workstation\vscode\extensions-to-install.json" | ConvertFrom-Json
 
@@ -303,7 +306,53 @@ Function Install-EditorExtensions
 		}
 	}
 
-	Write-Host "Editor extensions installed."
+	Write-Host "Editor extensions installed for $EditorType."
+}
+
+Function Install-EditorKeybindings
+{
+	<#
+		.DESCRIPTION
+		Installs editor keybindings.
+	#>
+
+	Param
+	(
+		# The type of editor to install keybindings for.
+		[string] [Parameter(Mandatory = $true)] [ValidateSet('VSCode', 'Cursor')] $EditorType
+	)
+
+	Write-Host -ForegroundColor DarkGray "Configuring keybindings for $EditorType..."
+	$genericEditorKeybindingsPath = "$repositoryRootPath\workstation\vscode\keybindings.json"
+	$editorSpecificKeybindingsPath = "$repositoryRootPath\workstation\vscode\$EditorType-keybindings.json"
+
+	Write-Host -ForegroundColor DarkGray "Getting keybindings from $genericEditorKeybindingsPath..."
+	$keybindings = Get-Content -Path $genericEditorKeybindingsPath | ConvertFrom-Json
+	Write-Host -ForegroundColor DarkGray "Keybindings from $genericEditorKeybindingsPath retrieved."
+
+	Write-Host -ForegroundColor DarkGray "Getting keybindings from $editorSpecificKeybindingsPath..."
+	$editorSpecificKeybindings = Get-Content -Path $editorSpecificKeybindingsPath | ConvertFrom-Json
+	Write-Host -ForegroundColor DarkGray "Keybindings from $editorSpecificKeybindingsPath retrieved."
+
+	Write-Host -ForegroundColor DarkGray "Combining keybindings..."
+	$combinedKeybindings = $keybindings + $editorSpecificKeybindings
+
+	# set in editor specific keybindings path
+	If ($EditorType -eq "VSCode")
+	{
+		$editorKeybindingsPath = "$env:USERPROFILE\AppData\Roaming\Code\User\keybindings.json"
+		Write-Host -ForegroundColor DarkGray "VSCode keybindings path: $editorKeybindingsPath"
+	}
+	Else
+	{
+		$editorKeybindingsPath = "$env:USERPROFILE\AppData\Roaming\Cursor\User\keybindings.json"
+		Write-Host -ForegroundColor DarkGray "Cursor keybindings path: $editorKeybindingsPath"
+	}
+
+	Write-Host -ForegroundColor DarkGray "Writing keybindings to $editorKeybindingsPath..."
+	Set-Content -Path $editorKeybindingsPath -Value ($combinedKeybindings | ConvertTo-Json)
+	Write-Host -ForegroundColor DarkGray "Keybindings written."
+	Write-Host "Editor keybindings installed for $EditorType."
 }
 
 Install-Git
@@ -317,5 +366,6 @@ Install-VSCode
 Install-SymLinkToVSCodeSettings
 Install-EditorExtensions -EditorType "VSCode"
 Install-EditorExtensions -EditorType "Cursor"
+Install-EditorKeybindings -EditorType "VSCode"
 
 Write-Host -ForegroundColor Green "`n[CONFIGURATION COMPLETE]"

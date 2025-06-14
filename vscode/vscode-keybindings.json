@@ -1,0 +1,12 @@
+[
+	{
+		"key": "ctrl+l",
+		"command": "workbench.action.chat.openAgent",
+		"when": "config.chat.agent.enabled && !chatSetupDisabled && !chatSetupHidden"
+	},
+	{
+		"key": "ctrl+shift+i",
+		"command": "-workbench.action.chat.openAgent",
+		"when": "config.chat.agent.enabled && !chatSetupDisabled && !chatSetupHidden"
+	}
+]
