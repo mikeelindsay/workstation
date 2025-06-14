@@ -282,5 +282,7 @@
     "screencastMode.fontSize": 24,
     "screencastMode.verticalOffset": 10,
     "screencastMode.keyboardOverlayTimeout": 600,
-    "github.copilot.nextEditSuggestions.enabled": true
+    "github.copilot.nextEditSuggestions.enabled": true,
+    "workbench.activityBar.location": "hidden",
+    "window.commandCenter": false
 }
