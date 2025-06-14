@@ -107,39 +107,39 @@
         "command": "-workbench.action.focusSideBar"
     },
     {
-        "key": "ctrl+shift+1",
+        "key": "ctrl+shift+q",
         "command": "vscode-harpoon.addEditor1",
         "when": "editorFocus"
     },
     {
-        "key": "ctrl+1",
+        "key": "ctrl+q",
         "command": "vscode-harpoon.gotoEditor1"
     },
     {
-        "key": "ctrl+shift+2",
+        "key": "ctrl+shift+w",
         "command": "vscode-harpoon.addEditor2",
         "when": "editorFocus"
     },
     {
-        "key": "ctrl+2",
+        "key": "ctrl+w",
         "command": "vscode-harpoon.gotoEditor2"
     },
     {
-        "key": "ctrl+shift+3",
+        "key": "ctrl+shift+e",
         "command": "vscode-harpoon.addEditor3",
         "when": "editorFocus"
     },
     {
-        "key": "ctrl+3",
+        "key": "ctrl+e",
         "command": "vscode-harpoon.gotoEditor3"
     },
     {
-        "key": "ctrl+shift+4",
+        "key": "ctrl+shift+r",
         "command": "vscode-harpoon.addEditor4",
         "when": "editorFocus"
     },
     {
-        "key": "ctrl+4",
+        "key": "ctrl+r",
         "command": "vscode-harpoon.gotoEditor4"
     },
     {
@@ -192,10 +192,6 @@
         "command": "workbench.action.openPreviousEditorFromHistory"
     },
     {
-        "key": "ctrl+q",
-        "command": "workbench.action.openPreviousEditorFromHistory"
-    },
-    {
         "key": "ctrl+shift+u",
         "command": "-workbench.action.output.toggleOutput",
         "when": "workbench.panel.output.active"
@@ -219,5 +215,80 @@
         "key": "ctrl+i",
         "command": "-composer.toggleAllVsSingleChatContext",
         "when": "composerFocused"
+    },
+    {
+      "key": "ctrl+q",
+      "command": "-workbench.action.quickOpenNavigateNextInViewPicker",
+      "when": "inQuickOpen && inViewsPicker"
+    },
+    {
+      "key": "ctrl+q",
+      "command": "-workbench.action.quickOpenView"
+    },
+    {
+      "key": "ctrl+shift+w",
+      "command": "-workbench.action.closeWindow"
+    },
+    {
+      "key": "ctrl+w",
+      "command": "-workbench.action.backgroundComposer.close",
+      "when": "!editorTextFocus && focusedView =~ /^workbench.view.backgroundAgent.content/"
+    },
+    {
+      "key": "ctrl+w",
+      "command": "-composer.closeComposerTab",
+      "when": "composerFocused && !editorTextFocus || !editorTextFocus && focusedView =~ /^workbench.panel.aichat.view/"
+    },
+    {
+      "key": "ctrl+w",
+      "command": "-workbench.action.closeGroup",
+      "when": "activeEditorGroupEmpty && multipleEditorGroups"
+    },
+    {
+      "key": "ctrl+w",
+      "command": "-extension.vim_ctrl+w",
+      "when": "editorTextFocus && vim.active && vim.use<C-w> && !inDebugRepl"
+    },
+    {
+      "key": "ctrl+w",
+      "command": "-workbench.action.closeActiveEditor"
+    },
+    {
+      "key": "ctrl+e",
+      "command": "-workbench.action.quickOpenNavigateNextInFilePicker",
+      "when": "inFilesPicker && inQuickOpen"
+    },
+    {
+      "key": "ctrl+e",
+      "command": "-extension.vim_ctrl+e",
+      "when": "editorTextFocus && vim.active && vim.use<C-e> && !inDebugRepl"
+    },
+    {
+      "key": "ctrl+e",
+      "command": "-editor.action.toggleScreenReaderAccessibilityMode",
+      "when": "accessibilityHelpIsShown"
+    },
+    {
+      "key": "ctrl+e",
+      "command": "-workbench.action.quickOpen"
+    },
+    {
+      "key": "ctrl+e",
+      "command": "-composer.showBackgroundAgentHistory",
+      "when": "backgroundComposerEnabled"
+    },
+    {
+      "key": "ctrl+r",
+      "command": "-workbench.action.openRecent"
+    },
+    {
+      "key": "ctrl+r",
+      "command": "-workbench.action.quickOpenNavigateNextInRecentFilesPicker",
+      "when": "inQuickOpen && inRecentFilesPicker"
+    },
+    {
+      "key": "ctrl+r",
+      "command": "-extension.vim_ctrl+r",
+      "when": "editorTextFocus && vim.active && vim.use<C-r> && !inDebugRepl"
     }
 ]
