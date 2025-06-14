@@ -385,7 +385,7 @@ Function Install-GlazeWindowManager
 	$glazeConfigPath = "$glazeConfigRootPath\config.yaml"
 
 	Write-Host -ForegroundColor DarkGray "Installing Glaze Window Manager..."
-	Invoke-Expression "winget install --id GlazeWM --source winget"
+	Invoke-Expression "winget install glazewm --silent"
 	Write-Host -ForegroundColor DarkGray "Glaze Window Manager installed."
 
 	Write-Host -ForegroundColor DarkGray "Configuring Glaze Window Manager..."
