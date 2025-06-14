@@ -5,11 +5,36 @@
 $errorActionPreference = "Stop"
 $warningPreference = "Continue"
 
+Set-Variable -Name OPEN_SSH_FULL_PATH -Scope Private -Option Constant -Value 'C:\Windows\System32\OpenSSH\ssh.exe'
+
 $principal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
 $isAdmin = $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 If (-not $isAdmin)
 {
     Throw "This script must be ran as administrator."
+}
+
+Function Install-Git
+{
+	<#
+		.DESCRIPTION
+		Installs Git.
+	#>
+
+	Set-Variable -Name GIT_FULL_PATH -Scope Private -Option Constant -Value "C:\Program Files\Git\bin\git.exe"
+
+	Write-Host -ForegroundColor DarkGray "Checking if Git is installed..."
+	# If (-not (Test-Path -Path $GIT_FULL_PATH))
+	# {
+		Write-Host -ForegroundColor Red "Git is not installed. Please install Git and run this script again."
+
+		Write-Host -ForegroundColor DarkGray "Installing Git..."
+		Invoke-Expression "winget install --id Git.Git -e --silent --source winget"
+		Write-Host -ForegroundColor DarkGray "Git installed."
+	# }
+	# Else {
+		# Write-Host -ForegroundColor DarkGray "Git is installed."
+	# }
 }
 
 Function Enable-OpenSshService
@@ -56,13 +81,6 @@ Function Install-SshKey
 	$sshRootPath = "$env:USERPROFILE/.ssh/"
 
 
-	Write-Host -ForegroundColor DarkGray "Checking if Git is installed..."
-	If (-not (Test-Path -Path "C:/Windows/System32/OpenSSH/ssh.exe"))
-	{
-		Write-Host -ForegroundColor Red "Git is not installed. Please install Git and run this script again."
-		Exit
-	}
-
 	Write-Host -ForegroundColor DarkGray "Checking for existing SSH key..."
 	If (-not (Test-Path -Path "$sshRootPath/$SSH_KEY_NAME"))
 	{
@@ -98,7 +116,7 @@ Function Install-SshKey
 	Write-Host -ForegroundColor DarkGray "SSH config written."
 }
 
+Install-Git
 Enable-OpenSshService
 Install-SshKey
-git config --global core.sshCommand "C:/Windows/System32/OpenSSH/ssh.exe"
 Read-Host -Prompt "Press Enter to continue..."
