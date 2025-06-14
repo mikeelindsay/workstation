@@ -385,7 +385,7 @@ Function Install-GlazeWindowManager
 	$glazeConfigPath = "$glazeConfigRootPath\config.yaml"
 
 	Write-Host -ForegroundColor DarkGray "Installing Glaze Window Manager..."
-	Invoke-Expression "winget install --id GlazeWM -e --silent --source winget"
+	Invoke-Expression "winget install --id GlazeWM --source winget"
 	Write-Host -ForegroundColor DarkGray "Glaze Window Manager installed."
 
 	Write-Host -ForegroundColor DarkGray "Configuring Glaze Window Manager..."
@@ -414,10 +414,6 @@ Function Install-GlazeWindowManager
 
 	Write-Host "Glaze Window Manager configured."
 }
-
-Write-Host -ForegroundColor DarkGray "Resetting Winget sources..."
-winget source reset
-Write-Host -ForegroundColor DarkGray "Winget sources reset."
 
 Install-Git
 Enable-OpenSshService
