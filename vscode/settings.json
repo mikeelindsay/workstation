@@ -261,7 +261,6 @@
     "extensions.experimental.affinity": {
         "vscodevim.vim": 1
     },
-    "editor.minimap.enabled": true,
     "editor.renderWhitespace": "all",
     "workbench.editor.showTabs": "none",
     "cursor.cpp.enablePartialAccepts": true,
