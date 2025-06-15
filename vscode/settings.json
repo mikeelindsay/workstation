@@ -274,8 +274,7 @@
     "clock.dateFormat": "mm/dd/yyyy h:MM:ss TT",
     "bicep.enableSurveys": false,
     "cSpell.userWords": [
-        "pwsh",
-        "Trusable"
+        "pwsh"
     ],
     "powershell.promptToUpdatePowerShell": false,
     "editor.fontFamily": "JetBrains Mono",
