@@ -231,18 +231,6 @@ keybindings:
   - commands: ['toggle-floating --centered']
     bindings: ['alt+shift+space']
 
-  # Change the focused window to be tiling.
-  - commands: ['toggle-tiling']
-    bindings: ['alt+t']
-
-  # Change the focused window to be fullscreen.
-  - commands: ['toggle-fullscreen']
-    bindings: ['alt+f']
-
-  # Minimize focused window.
-  - commands: ['toggle-minimized']
-    bindings: ['alt+m']
-
   # Close focused window.
   - commands: ['close']
     bindings: ['alt+shift+q']
@@ -262,19 +250,11 @@ keybindings:
   # Launch CMD terminal. Alternatively, use `shell-exec wt` or
   # `shell-exec %ProgramFiles%/Git/git-bash.exe` to start Windows
   # Terminal and Git Bash respectively.
-  - commands: ['shell-exec cmd']
+  # Launch PowerShell (pwsh) as administrator in the user profile directory
+  - commands: ["shell-exec powershell -Command \"Start-Process pwsh -Verb RunAs -ArgumentList '-NoExit -Command cd $env:USERPROFILE\\source\\repos'\""]
     bindings: ['alt+enter']
 
-  # Focus the next/previous active workspace defined in `workspaces` config.
-  - commands: ['focus --next-active-workspace']
-    bindings: ['alt+s']
-  - commands: ['focus --prev-active-workspace']
-    bindings: ['alt+a']
-
-  # Focus the workspace that last had focus.
-  - commands: ['focus --recent-workspace']
-    bindings: ['alt+d']
-
+  # Change focus to a workspace defined in `workspaces` config.
   # Change focus to a workspace defined in `workspaces` config.
   - commands: ['focus --workspace 1']
     bindings: ['alt+1']
