@@ -284,5 +284,6 @@
     "screencastMode.keyboardOverlayTimeout": 600,
     "github.copilot.nextEditSuggestions.enabled": true,
     "workbench.activityBar.location": "hidden",
-    "window.commandCenter": false
+    "window.commandCenter": false,
+    "git.openRepositoryInParentFolders": "never"
 }

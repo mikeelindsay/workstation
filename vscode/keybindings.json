@@ -179,6 +179,14 @@
     "command": "vscode-harpoon.gotoEditor9"
   },
   {
+    "key": "alt+0",
+    "command": "vscode-harpoon.gotoGlobalEditor9"
+  },
+  {
+    "key": "alt+9",
+    "command": "vscode-harpoon.gotoGlobalEditor9"
+  },
+  {
     "key": "alt+q",
     "command": "workbench.action.openPreviousEditorFromHistory"
   },
@@ -312,5 +320,40 @@
     "key": "shift+alt+e",
     "command": "-PowerShell.ExpandAlias",
     "when": "editorTextFocus && editorLangId == 'powershell'"
+  },
+  {
+    "key": "alt+0",
+    "command": "-workbench.action.lastEditorInGroup"
+  },
+  {
+    "key": "alt+9",
+    "command": "-workbench.action.openEditorAtIndex9"
+  },
+  {
+    "key": "alt+8",
+    "command": "-workbench.action.openEditorAtIndex8"
+  },
+  {
+    "key": "alt+7",
+    "command": "-workbench.action.openEditorAtIndex7"
+  },
+  {
+    "key": "alt+6",
+    "command": "-workbench.action.openEditorAtIndex6"
+  },
+  {
+    "key": "alt+p",
+    "command": "-keybindings.editor.toggleSortByPrecedence",
+    "when": "inKeybindings"
+  },
+  {
+    "key": "alt+p",
+    "command": "-togglePreserveCase",
+    "when": "editorFocus"
+  },
+  {
+    "key": "alt+p",
+    "command": "-toggleSearchPreserveCase",
+    "when": "searchViewletFocus"
   }
 ]
