@@ -56,10 +56,13 @@ Function Install-Git
 	}
 
 	Write-Host -ForegroundColor DarkGray "Setting Git SSH command..."
-	git config --global core.sshCommand $OPEN_SSH_FULL_PATH > $null
+	git config --global core.sshcommand $OPEN_SSH_FULL_PATH > $null
+	git config --global core.sshcommand "C:/Windows/System32/OpenSSH/ssh.exe"
 	Write-Host -ForegroundColor DarkGray "Git SSH command set."
-
 	Write-Host "Git installed and configured."
+
+	git config --global user.email "mike@mike.com"
+	git config --global user.name "Mike"
 }
 
 Function Enable-OpenSshService
@@ -295,6 +298,10 @@ Function Install-SymLinkToEditorSettings
 		Throw "Invalid editor type '$EditorType'."
 	}
 
+
+	Write-Host -ForegroundColor DarkGray "Removing existing editor settings symlink if it exists..."
+	Remove-Item -Path $editorSettingsPath -Force -ErrorAction SilentlyContinue
+
 	Write-Host -ForegroundColor DarkGray "Checking if symlink to editor settings exists..."
 	If (Test-SymLink -Path $editorSettingsPath)
 	{
@@ -365,7 +372,7 @@ Function Install-EditorExtensions
 		}
 		Else {
 			Write-Host -ForegroundColor DarkGray "Installing" $extension "..."
-			& $editorExe $cliJs --install-extension $extension > $null
+			& $editorExe $cliJs --install-extension $extension
 			Write-Host -ForegroundColor DarkGray "Extension '$extension' installed."
 		}
 	}
