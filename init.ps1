@@ -121,7 +121,7 @@ Function Install-SshKey
 
 	Write-Host -ForegroundColor DarkGray "Checking if SSH key is already in ssh-agent..."
 	$existingKeys = ssh-add -L
-	$keyContent = Get-Content -Path "$sshRootPath/$SSH_KEY_NAME.pub"
+	$keyContent = Get-Content -Path "$sshRootPath/$SSH_KEY_NAME.pub" -ErrorAction SilentlyContinue
 	If ($existingKeys -notcontains $keyContent)
 	{
 		Write-Host -ForegroundColor DarkGray "SSH key is not in ssh-agent. Adding to ssh-agent..."
