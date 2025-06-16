@@ -467,7 +467,21 @@ Function Install-GlazeWindowManager
 	Write-Host "Glaze Window Manager configured."
 }
 
+Function Install-Discord
+{
+	<#
+		.DESCRIPTION
+		Installs Discord.
+	#>
+
+	Write-Host -ForegroundColor DarkGray "Installing Discord..."
+	Invoke-Expression "winget install Discord.Discord --silent"
+	Invoke-Expression "winget install --id Discord.Discord -e --silent --source winget"
+	Write-Host -ForegroundColor DarkGray "Discord installed."
+}
+
 Install-Pwsh
+Install-Discord
 Install-Git
 Enable-OpenSshService
 Install-SshKey
