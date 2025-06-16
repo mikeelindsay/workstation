@@ -18,6 +18,19 @@ If (-not $isAdmin)
 	Throw "This script must be ran as administrator."
 }
 
+Function Install-Pwsh
+{
+	<#
+		.DESCRIPTION
+		Installs PowerShell 7.
+	#>
+
+	Write-Host -ForegroundColor DarkGray "Installing PowerShell 7..."
+	Invoke-Expression "winget install Microsoft.PowerShell --silent"
+	Invoke-Expression "winget install --id Microsoft.PowerShell -e --silent --source winget"
+	Write-Host "PowerShell 7 installed."
+}
+
 Function Install-Git
 {
 	<#
@@ -447,6 +460,7 @@ Function Install-GlazeWindowManager
 	Write-Host "Glaze Window Manager configured."
 }
 
+Install-Pwsh
 Install-Git
 Enable-OpenSshService
 Install-SshKey
