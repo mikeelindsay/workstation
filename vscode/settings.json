@@ -45,7 +45,10 @@
         { "before": ["\\", "t", "t"], "commands": ["workbench.action.problems.focus"] },
         { "before": ["\\", "t", "e"], "commands": ["workbench.view.testing.focus"] },
         { "before": ["\\", "t", "r"], "commands": ["testing.runAtCursor", "workbench.view.testing.focus"] },
-        { "before": ["\\", "g", "i"], "commands": [ { "command": "type", "args": { "text": "/:<enter>wgd" } } ] }
+        { "before": ["\\", "d", "f"], "commands": ["gitlens.diffLineWithWorking", "gitlens.diffWithRevision"] },
+        { "before": ["\\", "g", "i"], "after": ["g", "g", "/", ":", "<CR>", "w", "g", "d"] },
+        { "before": ["\\", "a", "a"], "commands": ["workbench.action.navigateToLastEditLocation"] },
+        { "before": ["\\", "g", "e"], "commands": ["editor.action.goToImplementation"] }
     ],
     "vim.visualModeKeyBindings": [
         { "before": ["K"], "commands": ["editor.action.moveLinesUpAction"] },
@@ -76,7 +79,10 @@
     "git.autofetch": true,
     "clock.dateFormat": "mm/dd/yyyy h:MM:ss TT",
     "bicep.enableSurveys": false,
-    "cSpell.userWords": ["pwsh"],
+    "cSpell.userWords": [
+        "ESERVICE",
+        "pwsh"
+    ],
     "powershell.promptToUpdatePowerShell": false,
     "editor.fontFamily": "JetBrains Mono",
     "screencastMode.fontSize": 24,
@@ -92,5 +98,19 @@
         "plaintext": false,
         "markdown": false,
         "scminput": false
-    }
+    },
+    "editor.minimap.enabled": false,
+    "explorer.confirmDelete": false,
+    "editor.accessibilitySupport": "off",
+    "git.confirmSync": false,
+    "[dockercompose]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
+        "editor.autoIndent": "advanced",
+        "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
+    "[github-actions-workflow]": {
+        "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
+    "cursor.composer.usageSummaryDisplay": "always"
 }

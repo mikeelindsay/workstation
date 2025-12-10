@@ -128,6 +128,8 @@ workspaces:
     display_name: 'Code'
   - name: '4'
     display_name: 'Floating'
+  - name: '5'
+    display_name: 'Chrome'
 
 window_rules:
   - commands: ['ignore']
@@ -164,7 +166,11 @@ window_rules:
   # Catch-all rule for everything else to workspace 4
   - commands: ['set-floating', 'move --workspace 4', 'focus --workspace 4']
     match:
-      - window_process: {not_regex: 'msedge|Slack|Cursor|SnippingTool|Taskmgr|PowerToys|Lively|Picture.in.Picture|StartMenuExperienceHost|dwm|TextInputHost|SearchHost'}
+      - window_process: {not_regex: 'msedge|Slack|Cursor|SnippingTool|Taskmgr|PowerToys|Lively|Picture.in.Picture|StartMenuExperienceHost|dwm|TextInputHost|SearchHost|chrome'}
+  # Chrome move to workspace 5
+  - commands: ['move --workspace 5', 'focus --workspace 5']
+    match:
+      - window_process: { equals: 'chrome' }
 
 binding_modes:
   # When enabled, the focused window can be resized via arrow keys or HJKL.
@@ -264,6 +270,9 @@ keybindings:
     bindings: ['alt+3']
   - commands: ['focus --workspace 4']
     bindings: ['alt+4']
+  - commands: ['focus --workspace 5']
+    bindings: ['alt+5']
+
 
   # Move the focused window's parent workspace to a monitor in a given
   # direction.
@@ -285,3 +294,4 @@ keybindings:
     bindings: ['alt+shift+3']
   - commands: ['move --workspace 4', 'focus --workspace 4']
     bindings: ['alt+shift+4']
+  - commands: ['move --workspace 5', 'focus --workspace 5']
